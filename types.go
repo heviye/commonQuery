@@ -1,5 +1,10 @@
 package commonQuery
 
+import (
+	"log"
+	"time"
+)
+
 type Rower interface {
 	String(string) string
 	Int64(string) int64
@@ -7,6 +12,7 @@ type Rower interface {
 	Int(string) int
 	Bool(string) bool
 	ColLen() int
+	Time(format, col string) *time.Time
 }
 
 type Row map[string]interface{}
@@ -56,4 +62,19 @@ func (r Row) Bool(col string) bool {
 	}
 
 	return false
+}
+
+func (r Row) Time(format, col string) *time.Time {
+	v, ok := r[col].(string)
+	if ok {
+		t, err := time.ParseInLocation(format, v, time.Local)
+		if err != nil {
+			log.Printf("[Row.Time] time.ParseInLocation time:%s err:%s", v, err.Error())
+			return nil
+		}
+
+		return &t
+	}
+
+	return nil
 }
