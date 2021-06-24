@@ -37,6 +37,7 @@ func Query(rows *sql.Rows) ([]Rower, error) {
 			switch realVal := val.(type) {
 			case []uint8:
 				retRow[col] = string(realVal)
+
 			default:
 				retRow[col] = val
 			}
